@@ -39,7 +39,8 @@ const config = {
   test: { },
   development: {
     mongo: {
-      uri: `mongodb://${requireProcessEnv('DB_HOST')}/security-db`,
+      // uri: `mongodb://${requireProcessEnv('DB_HOST')}/security-db`,
+      uri: `mongodb+srv://huybkdn23:wjRF8RmoZMrW7SqL@cluster1-gujje.gcp.mongodb.net/security-db?retryWrites=true&w=majority`,
       options: {
         debug: true
       }

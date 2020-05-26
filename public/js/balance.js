@@ -85,7 +85,9 @@
 
   $('#balance').on('keyup', function() {
     console.log('@DEBUG keyup', $(this).val());
-    $(this).val($(this).val().replace(/[^1-9-][^0-9-]*|(?!^)-/g, ''));
+    // $(this).val($(this).val().replace(/[^1-9-][^0-9-]*|(?!^)-/g, ''));
+
+    $(this).val($(this).val().replace(/^[^1-9-]|([^0-9])*/g, ''));
   });
 
   $('#logout-btn').on('click', function () {
@@ -104,7 +106,7 @@
         balance: Number($('#balance').val())
       })
       , dataType: 'json'
-      , cache: false
+      , cache: false                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
       , success: function(data){
         getPage();
       }

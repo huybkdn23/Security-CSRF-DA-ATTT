@@ -4,7 +4,7 @@ const { Schema }    = require('mongoose');
 const session       = require("express-session");
 const bodyParser    = require("body-parser");
 const morgan        = require("morgan");
-const csurf         = require("csurf");
+const cors          = require('cors');
 const api           = require('./api/index');
 const pages         = require('./pages/index');
 const { mongo }     = require('./config');
@@ -18,6 +18,7 @@ mongoose.connect(mongo.uri);
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(express.static('public'));
+app.use(cors());
 app.use(morgan("dev"));
 app.use(session({
     secret: "Security",
@@ -36,7 +37,8 @@ app.use((err,req,res,next) => {
         next();
         return;
     }
-    res.status(403).send("CSURF ERROR");
+    console.log('@ERROR CSURF');
+    return res.status(403).json({ message: "CSURF ERROR" });
 });
 app.listen(8000, () => {
     console.log("Server is running on port 8000");
