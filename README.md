@@ -1,7 +1,6 @@
 # Security-CSRF-DA-ATTT
-### Installation and Building project
-## Server side
-### Installation
+## Installation and Building project
+### Server side
 Make sure enviroments in your PC is installed, includes: nodejs, npm
 
 If your PC haven't nodemon yet, just run command in bash:
@@ -20,8 +19,7 @@ Run project, in Server-side folder
 npm start
 ```
 
-## Attacker side
-### Installation
+### Attacker side
 Make sure enviroments in your PC is installed, includes: nodejs, npm
 
 If your PC haven't nodemon yet, just run command in bash:
