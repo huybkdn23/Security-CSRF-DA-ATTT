@@ -6,9 +6,8 @@
   /*==================================================================
   [ Validate ]*/
 
-  //redirect if token is exist
-  getPage();
   var input = $('.validate-input .input100');
+  getPage();
 
   $('.validate-form').on('submit',function(){
       var check = true;
@@ -55,6 +54,11 @@
       $(thisAlert).removeClass('alert-validate');
   }
 
+  function setInitForm() {
+    $('#account_id').val('');
+    $('#balance').val('');
+  }
+
   function getCookie(cookie, name) {
     var nameEQ = name + "=";
     var ca = cookie.split(';');
@@ -67,6 +71,7 @@
   }
 
   function getPage() {
+    setInitForm();
     $.ajax({
       type: 'post'
       ,url: '/api/auth'
@@ -76,41 +81,54 @@
       }
       , data: JSON.stringify({
         token: getCookie(document.cookie, 'token')
+        ,_csrf: $('#_csrf').val()
       })
       , dataType: 'json'
       , cache: false
       , success: function(data){
-        if (data && data.code === 'VALID_ACCOUNT') location.replace('/balances');
+        if (data && data.code === 'UNAUTHORIZED') {
+          localStorage.removeItem('token');
+          location.replace('/');
+          return false;
+        }
+        $('#username').text(data.user.username);
+        $('#current_balance').val(data.user.balance);
+        $('#user_id').val(data.user.id);
       }
       , error: function(error) {
-        }
+        console.log('@ERROR', error);
+      }
     });
   }
 
-  $('#login-btn').on('click', function () {
-    $.ajax({
-      type: 'post'
-      ,url: '/api/auth'
-      ,headers: {
-          'Content-Type': 'application/json',
-          'CSRF-Token': $('#_csrf').val()
-      }
-      , data: JSON.stringify({
-        username: $('#username').val().trim(),
-        password: $('#password').val()
-      })
-      , dataType: 'json'
-      , cache: false
-      , success: function(data){
-          console.log('Login successfuly', data);
-          localStorage.setItem('token', data.token);
-          document.cookie = 'token=' + data.token + ';path=/';
-          location.replace('/balances');
-      }
-      , error: function(error) {
-          alert(error.responseJSON.message);
-        }
-    });
-  })
+  $('#balance').on('keyup', function() {
+    $(this).val($(this).val().replace(/^[^1-9-]|([^0-9])*/g, ''));
+  });
+
+  $('#logout-btn').on('click', function () {
+    localStorage.removeItem('token');
+    document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    location.replace('/');
+  });
+
+  // $('#submit-btn').on('click', function () {
+  //   console.log('@DEBUG submit', $('#_csrf').val().trim());
+  //   $.ajax({
+  //     type: 'get'
+  //     , url: '/api/transferring?account_id=' + $('#account_id').val() + '&balance=' + Number($('#balance').val())
+  //     + '&_csrf=' + $('#_csrf').val().trim()
+  //     , headers: {
+  //         'Content-Type': 'application/json',
+  //         'CSRF-Token': $('#_csrf').val().trim()
+  //     }
+  //     , dataType: 'json'
+  //     , cache: false
+  //     , success: function(data){
+  //       getPage();
+  //     }
+  //     , error: function(error) {
+  //       }
+  //   });
+  // });
 
 })(jQuery);

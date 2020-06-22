@@ -54,16 +54,33 @@
       $(thisAlert).removeClass('alert-validate');
   }
 
+  function setInitForm() {
+    $('#account_id').val('');
+    $('#balance').val('');
+  }
+
+  function getCookie(cookie, name) {
+    var nameEQ = name + "=";
+    var ca = cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+  }
+
   function getPage() {
-    console.log('@DEBUG balance getPage()');
+    setInitForm();
     $.ajax({
       type: 'post'
       ,url: '/api/auth'
       ,headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'CSRF-Token': $('#_csrf').val()
       }
       , data: JSON.stringify({
-        token: localStorage.getItem('token')
+        token: getCookie(document.cookie, 'token')
       })
       , dataType: 'json'
       , cache: false
@@ -73,7 +90,6 @@
           location.replace('/');
           return false;
         }
-        console.log('@DEBUG getPage success', data.user);
         $('#username').text(data.user.username);
         $('#current_balance').val(data.user.balance);
         $('#user_id').val(data.user.id);
@@ -84,33 +100,34 @@
   }
 
   $('#balance').on('keyup', function() {
-    console.log('@DEBUG keyup', $(this).val());
-    $(this).val($(this).val().replace(/[^1-9-][^0-9-]*|(?!^)-/g, ''));
+    $(this).val($(this).val().replace(/^[^1-9-]|([^0-9])*/g, ''));
   });
 
   $('#logout-btn').on('click', function () {
     localStorage.removeItem('token');
+    document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     location.replace('/');
   });
 
-  $('#submit-btn').on('click', function () {
-    $.ajax({
-      type: 'put'
-      , url: '/api/users/' + $('#user_id').val().trim()
-      , headers: {
-          'Content-Type': 'application/json'
-      }
-      , data: JSON.stringify({
-        balance: Number($('#balance').val())
-      })
-      , dataType: 'json'
-      , cache: false
-      , success: function(data){
-        getPage();
-      }
-      , error: function(error) {
-        }
-    });
-  });
+  // $('#submit-btn').on('click', function () {
+  //   $.ajax({
+  //     type: 'post'
+  //     , url: '/api/users/' + $('#user_id').val().trim()
+  //     , headers: {
+  //         'Content-Type': 'application/json',
+  //         'CSRF-Token': $('#_csrf').val()
+  //     }
+  //     , data: JSON.stringify({
+  //       balance: Number($('#balance').val())
+  //     })
+  //     , dataType: 'json'
+  //     , cache: false
+  //     , success: function(data){
+  //       getPage();
+  //     }
+  //     , error: function(error) {
+  //       }
+  //   });
+  // });
 
 })(jQuery);

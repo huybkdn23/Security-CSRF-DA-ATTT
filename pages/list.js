@@ -4,13 +4,10 @@ const collectionUser= require('../user/model');
 const jwt           = require('jsonwebtoken');
 const { isAuthenticated } = require('../middlewares/authenticate');
 
-router.get('/balances', isAuthenticated, (req, res) => {
-  res.render("balance", {
-      // csurfToken: req.csrfToken(),
-      user: req.user
+router.get('/list', (req, res) => {
+  res.render("list", {
+      // csurfToken: req.csrfToken()
   });
-  // res.render('balance');
-  // res.status(200).json({message: 'abc'});
 });
 
 module.exports = router;

@@ -62,7 +62,8 @@
       type: 'post'
       ,url: '/api/users'
       ,headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'CSRF-Token': $('#_csrf').val()
       }
       , data: JSON.stringify({
         username: $('#username').val().trim(),

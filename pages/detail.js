@@ -4,13 +4,13 @@ const collectionUser= require('../user/model');
 const jwt           = require('jsonwebtoken');
 const { isAuthenticated } = require('../middlewares/authenticate');
 
-router.get('/balances', isAuthenticated, (req, res) => {
-  res.render("balance", {
+router.get('/user', async (req, res) => {
+  const user = await collectionUser.findById(req.query.id);
+  if (!user) return res.status(404).send('PAGE NOT FOUND');
+  res.render("detail", {
       // csurfToken: req.csrfToken(),
-      user: req.user
+      user: user
   });
-  // res.render('balance');
-  // res.status(200).json({message: 'abc'});
 });
 
 module.exports = router;

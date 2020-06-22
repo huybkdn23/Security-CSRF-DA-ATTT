@@ -27,7 +27,7 @@
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 <!--===============================================================================================-->
 <style>
-    .right-menu{
+     .right-menu{
         line-height: 12px;
         font-size: 20px;
         margin-top: 10px;
@@ -47,36 +47,22 @@
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-50">
-				<form class="login100-form validate-form" method="post" action="/api/users/<%=user._id%>">
-					<input type="hidden" name="_csrf" value="<%=csurfToken%>" id="_csrf">
-					<span class="login100-form-title p-b-33">
-						Update Balance <span id="username"></span>
-                    </span>
-                    <input type="hidden" id="user_id">
-
-					<div class="wrap-input100 validate-input">
-                        <label for="current_balance">Current balance:</label>
-						<input class="input100" type="text" readonly="readonly" name="current_balance" id="current_balance">
-						<span class="focus-input100-1"></span>
-						<span class="focus-input100-2"></span>
-					</div>
-
-					<div class="wrap-input100 rs1 validate-input">
-                        <label for="balance">Addition balance:</label>
-						<input class="input100" type="text" name="balance" id="balance">
-						<span class="focus-input100-1"></span>
-						<span class="focus-input100-2"></span>
-					</div>
-
-					<div class="container-login100-form-btn m-t-20">
-						<input type="submit" name="submit" class="login100-form-btn" id="submit-btn" value="Submit">
-					</div>
-				</form>
+				<table id="tbList" name="tbList" class="table table-hover typeList">
+					<thead>
+					<tr>
+						<th>Username</th>
+						<th>Balance</th>
+						<th>Detail</th>
+					</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
 			</div>
             <div class="right-menu">
-                <a href="http://localhost:8000/transfer">Transfer</a> | 
+				<a href="http://localhost:8000/transfer">Transfer</a> | 
+                <a href="http://localhost:8000/balances">Recharge</a> | 
                 <a href="http://localhost:8000/changepassword">Change password</a> | 
-                <a href="http://localhost:8000/list">List</a> | 
                 <button id="logout-btn">Logout</button>
             </div>
 		</div>
@@ -99,7 +85,7 @@
 <!--===============================================================================================-->
 	<script src="vendor/countdowntime/countdowntime.js"></script>
 <!--===============================================================================================-->
-	<script src="js/balance.js"></script>
+	<script src="js/list.js"></script>
 
 </body>
 </html>

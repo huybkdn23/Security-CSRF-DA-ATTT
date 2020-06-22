@@ -14,7 +14,13 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 6
+    // minlength: [6, 'Path `password` is shorter than the minimum allowed length (6)']
+    validate: {
+      validator: (v) => {
+        return v.length >= 6;
+      },
+      message: (props) => `${props.value} is shorter than the minimum allowed length (6); response_code=1111`,
+    }
   },
   balance: {
     type: Number,
@@ -51,7 +57,6 @@ userSchema.methods = {
     return view
   },
   authenticate(password) {
-    console.log('@DEBUG authenticate', password);
     return bcrypt.compare(password, this.password).then((valid) => valid ? this : false)
   }
 }

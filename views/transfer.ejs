@@ -27,7 +27,7 @@
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 <!--===============================================================================================-->
 <style>
-    .right-menu{
+     .right-menu{
         line-height: 12px;
         font-size: 20px;
         margin-top: 10px;
@@ -47,8 +47,7 @@
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-50">
-				<form class="login100-form validate-form" method="post" action="/api/users/<%=user._id%>">
-					<input type="hidden" name="_csrf" value="<%=csurfToken%>" id="_csrf">
+				<form class="login100-form validate-form" method="GET" action="/api/transferring">
 					<span class="login100-form-title p-b-33">
 						Update Balance <span id="username"></span>
                     </span>
@@ -61,8 +60,15 @@
 						<span class="focus-input100-2"></span>
 					</div>
 
+					<div class="wrap-input100 rs1 validate-input" data-validate="Password is required">
+                        <label for="balance">Account ID:</label>
+						<input class="input100" type="text" name="account_id" id="account_id">
+						<span class="focus-input100-1"></span>
+						<span class="focus-input100-2"></span>
+					</div>
+
 					<div class="wrap-input100 rs1 validate-input">
-                        <label for="balance">Addition balance:</label>
+                        <label for="balance">Amount to transfer:</label>
 						<input class="input100" type="text" name="balance" id="balance">
 						<span class="focus-input100-1"></span>
 						<span class="focus-input100-2"></span>
@@ -74,7 +80,7 @@
 				</form>
 			</div>
             <div class="right-menu">
-                <a href="http://localhost:8000/transfer">Transfer</a> | 
+                <a href="http://localhost:8000/balances">Recharge</a> | 
                 <a href="http://localhost:8000/changepassword">Change password</a> | 
                 <a href="http://localhost:8000/list">List</a> | 
                 <button id="logout-btn">Logout</button>
@@ -99,7 +105,7 @@
 <!--===============================================================================================-->
 	<script src="vendor/countdowntime/countdowntime.js"></script>
 <!--===============================================================================================-->
-	<script src="js/balance.js"></script>
+	<script src="js/transfer.js"></script>
 
 </body>
 </html>

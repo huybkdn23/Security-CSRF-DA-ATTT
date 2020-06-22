@@ -6,9 +6,8 @@
   /*==================================================================
   [ Validate ]*/
 
-  //redirect if token is exist
-  getPage();
   var input = $('.validate-input .input100');
+  getPage();
 
   $('.validate-form').on('submit',function(){
       var check = true;
@@ -55,62 +54,66 @@
       $(thisAlert).removeClass('alert-validate');
   }
 
-  function getCookie(cookie, name) {
-    var nameEQ = name + "=";
-    var ca = cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }
-    return null;
+  function setInitForm() {
+    $('#tbList tbody').empty();
   }
 
   function getPage() {
+    setInitForm();
     $.ajax({
-      type: 'post'
-      ,url: '/api/auth'
+      type: 'get'
+      ,url: '/api/users'
       ,headers: {
           'Content-Type': 'application/json',
           'CSRF-Token': $('#_csrf').val()
       }
-      , data: JSON.stringify({
-        token: getCookie(document.cookie, 'token')
-      })
       , dataType: 'json'
       , cache: false
       , success: function(data){
-        if (data && data.code === 'VALID_ACCOUNT') location.replace('/balances');
+        if (!data.length) return;
+        $.each(data, function(index, item) {
+          var html = [];
+          html.push("<tr>"
+          + "<td>" + item.username + "</td>"
+          + "<td>" + item.balance + "</td>"
+          + "<td>" + "<button type='button' style='height:35px;width:60px'class='login100-form-btn' onclick=\"getItem('" + item.id + "');\">Detail</button>" + "</td>"
+          + "</tr>");
+          $('#tbList tbody').append(html);
+        })
       }
       , error: function(error) {
         }
     });
   }
 
-  $('#login-btn').on('click', function () {
+  $('#balance').on('keyup', function() {
+    $(this).val($(this).val().replace(/^[^1-9-]|([^0-9])*/g, ''));
+  });
+
+  $('#logout-btn').on('click', function () {
+    localStorage.removeItem('token');
+    document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    location.replace('/');
+  });
+
+  $('#submit-btn').on('click', function () {
+    console.log('@DEBUG submit', $('#_csrf').val().trim());
     $.ajax({
-      type: 'post'
-      ,url: '/api/auth'
-      ,headers: {
+      type: 'get'
+      , url: '/api/transferring?account_id=' + $('#account_id').val() + '&balance=' + Number($('#balance').val())
+      + '&_csrf=' + $('#_csrf').val().trim()
+      , headers: {
           'Content-Type': 'application/json',
-          'CSRF-Token': $('#_csrf').val()
+          'CSRF-Token': $('#_csrf').val().trim()
       }
-      , data: JSON.stringify({
-        username: $('#username').val().trim(),
-        password: $('#password').val()
-      })
       , dataType: 'json'
       , cache: false
       , success: function(data){
-          console.log('Login successfuly', data);
-          localStorage.setItem('token', data.token);
-          document.cookie = 'token=' + data.token + ';path=/';
-          location.replace('/balances');
+        getPage();
       }
       , error: function(error) {
-          alert(error.responseJSON.message);
         }
     });
-  })
+  });
 
 })(jQuery);
